@@ -3,16 +3,19 @@ mod mandelbrot;
 use pixels::{Error, Pixels, SurfaceTexture};
 use winit::{
     dpi::LogicalSize,
-    event::Event,
+    event::{Event, VirtualKeyCode},
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
+use winit_input_helper::WinitInputHelper;
 
 use mandelbrot::Mandelbrot;
 
 const VIEWPORT_WIDTH: u32 = 300;
 const VIEWPORT_HEIGHT: u32 = 300;
-const PIXEL_SCALE: f64 = 1.0;
+const STARTING_ZOOM: f64 = 2.0;
+
+const SCROLL_SPEED: f64 = 10.0;
 
 const DIVERGE_THRESHOLD: f64 = 16.0;
 const DIVERGE_ITERATIONS: u32 = 100;
@@ -20,10 +23,13 @@ const DIVERGE_ITERATIONS: u32 = 100;
 fn main() -> Result<(), Error> {
     env_logger::init();
     let event_loop = EventLoop::new();
+    let mut input = WinitInputHelper::new();
+
+    let mut zoom = STARTING_ZOOM;
 
     let window = {
         let size = LogicalSize::new(VIEWPORT_WIDTH as f64, VIEWPORT_HEIGHT as f64);
-        let scaled_size = LogicalSize::new(VIEWPORT_WIDTH as f64 * PIXEL_SCALE, VIEWPORT_HEIGHT as f64 * PIXEL_SCALE);
+        let scaled_size = LogicalSize::new(VIEWPORT_WIDTH as f64 * zoom, VIEWPORT_HEIGHT as f64 * zoom);
 
         WindowBuilder::new()
             .with_title("Mandelbrot Set Visualizer")
@@ -36,26 +42,72 @@ fn main() -> Result<(), Error> {
     let mut pixels = {
         let window_size = window.inner_size();
         let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
+
         Pixels::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, surface_texture)?
     };
 
     let gradient = colorgrad::rainbow();
     let mandelbrot = Mandelbrot::new(DIVERGE_ITERATIONS, DIVERGE_THRESHOLD);
 
+    let mut x_scroll = 0.0;
+    let mut y_scroll = 0.0;
+
+    let mut last_frame = std::time::Instant::now();
+
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
 
+        // TODO: This doesn't work well because the event loop doesn't tick. 
+        // Pull this logic out to something that does.
+        let delta_millis = last_frame.elapsed().as_secs_f64() * 1000.0;
+
+        if input.update(&event) {
+            if input.key_pressed(VirtualKeyCode::Escape) || input.close_requested() {
+                *control_flow = ControlFlow::Exit;
+                return;
+            }
+
+            if input.key_held(VirtualKeyCode::A) {
+                x_scroll -= SCROLL_SPEED * zoom * delta_millis;
+                window.request_redraw();
+            }
+
+            if input.key_held(VirtualKeyCode::D) {
+                x_scroll += SCROLL_SPEED * zoom * delta_millis;
+                window.request_redraw();
+            }
+
+            if input.key_held(VirtualKeyCode::W) {
+                y_scroll -= SCROLL_SPEED * zoom * delta_millis;
+                window.request_redraw();
+            }
+
+            if input.key_held(VirtualKeyCode::S) {
+                y_scroll += SCROLL_SPEED * zoom * delta_millis;
+                window.request_redraw();
+            }
+
+            if input.key_held(VirtualKeyCode::Up) {
+                zoom *= 0.95;
+                window.request_redraw();
+            }
+
+            if input.key_held(VirtualKeyCode::Down) {
+                zoom *= 1.0 / 0.95;
+                window.request_redraw();
+            }
+        }
+
         match event {
             Event::RedrawRequested(_) => {
-                println!("Redraw requested");
                 let frame = pixels.frame_mut();
 
                 for (i, pixel) in frame.chunks_exact_mut(4).enumerate() {
                     let x = (i % VIEWPORT_WIDTH as usize) as u32;
                     let y = (i / VIEWPORT_WIDTH as usize) as u32;
 
-                    let a = (x as f64 / VIEWPORT_WIDTH as f64) * 2.0 - 1.5;
-                    let b = (y as f64 / VIEWPORT_HEIGHT as f64) * 2.0 - 1.0;
+                    let a = (x as f64 / VIEWPORT_WIDTH as f64)  * zoom - 1.5 + x_scroll;
+                    let b = (y as f64 / VIEWPORT_HEIGHT as f64) * zoom - 1.0 + y_scroll;
 
                     let color = if let Some(num) = mandelbrot.calculate_at(a, b) {
                         let brightness = num as f64 / DIVERGE_ITERATIONS as f64;
@@ -75,6 +127,8 @@ fn main() -> Result<(), Error> {
             } => *control_flow = ControlFlow::Exit,
             _ => (),
         }
+    
+        last_frame = std::time::Instant::now();
     });
 }
 
