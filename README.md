@@ -22,7 +22,7 @@ The width of the window. Default: `450`.
 
 The height of the window. Default: `450`.
 
-### STARTING_ZOOM
+### `STARTING_ZOOM`
 
 The initial zoom value. Default `2`.
 
