@@ -1,6 +1,6 @@
 ## Requirements
 
-In order to run this package, you must [install Rust](https://www.rust-lang.org/tools/install)
+In order to run this package, you must [install Rust](https://www.rust-lang.org/tools/install).
 
 ## Usage
 
@@ -15,11 +15,11 @@ All values have defaults, but can be overridden by writing entries to a `.env` f
 
 ### `VIEWPORT_WIDTH`
 
-The width of the window. Default: `450`.
+The width of the window. Higher values reduce performance. Default: `450`.
 
 ### `VIEWPORT_HEIGHT`
 
-The height of the window. Default: `450`.
+The height of the window. Higher values reduce performance. Default: `450`.
 
 ### `STARTING_ZOOM`
 
@@ -39,4 +39,5 @@ The value at which a result can be considered to have diverged. Default: `16.0`.
 
 ### `DIVERGE_ITERATIONS`
 
-The number of iterations before a result can be considered not to have diverged. Default `100`.
+The number of iterations before a result can be considered not to have diverged.
+Higher values result in a better image but slower performance. Default `100`.
