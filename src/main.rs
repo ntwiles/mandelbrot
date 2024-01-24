@@ -1,3 +1,5 @@
+mod mandelbrot; 
+
 use pixels::{Error, Pixels, SurfaceTexture};
 use winit::{
     dpi::LogicalSize,
@@ -6,13 +8,11 @@ use winit::{
     window::WindowBuilder,
 };
 
-mod mandelbrot; 
-
 use mandelbrot::Mandelbrot;
 
 const VIEWPORT_WIDTH: u32 = 300;
 const VIEWPORT_HEIGHT: u32 = 300;
-const ZOOM: f64 = 1.0;
+const PIXEL_SCALE: f64 = 1.0;
 
 const DIVERGE_THRESHOLD: f64 = 16.0;
 const DIVERGE_ITERATIONS: u32 = 100;
@@ -23,7 +23,7 @@ fn main() -> Result<(), Error> {
 
     let window = {
         let size = LogicalSize::new(VIEWPORT_WIDTH as f64, VIEWPORT_HEIGHT as f64);
-        let scaled_size = LogicalSize::new(VIEWPORT_WIDTH as f64 * ZOOM, VIEWPORT_HEIGHT as f64 * ZOOM);
+        let scaled_size = LogicalSize::new(VIEWPORT_WIDTH as f64 * PIXEL_SCALE, VIEWPORT_HEIGHT as f64 * PIXEL_SCALE);
 
         WindowBuilder::new()
             .with_title("Mandelbrot Set Visualizer")
