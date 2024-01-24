@@ -57,7 +57,7 @@ fn main() -> Result<(), Error> {
                     let a = (x as f64 / VIEWPORT_WIDTH as f64) * 2.0 - 1.5;
                     let b = (y as f64 / VIEWPORT_HEIGHT as f64) * 2.0 - 1.0;
 
-                    let color = if let Some(num) = mandelbrot.calculage_diverge_number(a, b) {
+                    let color = if let Some(num) = mandelbrot.calculate_at(a, b) {
                         let brightness = num as f64 / DIVERGE_ITERATIONS as f64;
                         g.at(brightness).to_rgba8()
                     } else {

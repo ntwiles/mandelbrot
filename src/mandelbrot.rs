@@ -11,7 +11,7 @@ impl Mandelbrot {
         }
     }
 
-    pub fn calculage_diverge_number(&self, a: f64, b: f64) -> Option<u32> {
+    pub fn calculate_at(&self, a: f64, b: f64) -> Option<u32> {
         let mut aa = 0.0;
         let mut bb = 0.0;
 
