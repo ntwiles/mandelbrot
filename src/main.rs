@@ -11,8 +11,9 @@ use winit_input_helper::WinitInputHelper;
 
 use mandelbrot::Mandelbrot;
 
-const VIEWPORT_WIDTH: u32 = 450;
+const VIEWPORT_WIDTH: u32 = 800;
 const VIEWPORT_HEIGHT: u32 = 450;
+
 const STARTING_ZOOM: f64 = 2.0;
 
 const SCROLL_SPEED: f64 = 10.0;
@@ -112,7 +113,7 @@ fn main() -> Result<(), Error> {
                     let y = (i / VIEWPORT_WIDTH as usize) as u32;
 
                     let a = (x as f64 / VIEWPORT_WIDTH as f64)  * zoom - 1.5 + x_scroll;
-                    let b = (y as f64 / VIEWPORT_HEIGHT as f64) * zoom - 1.0 + y_scroll;
+                    let b = (y as f64 / VIEWPORT_WIDTH as f64) * zoom - 1.0 + y_scroll;
 
                     let color = if let Some(num) = mandelbrot.calculate_at(a, b) {
                         let brightness = num as f64 / DIVERGE_ITERATIONS as f64;
