@@ -6,6 +6,10 @@ use winit::{
     window::WindowBuilder,
 };
 
+mod mandelbrot; 
+
+use mandelbrot::Mandelbrot;
+
 const WIDTH: u32 = 300;
 const HEIGHT: u32 = 300;
 const DIVERGE_THRESHOLD: f64 = 16.0;
@@ -35,6 +39,7 @@ fn main() -> Result<(), Error> {
     };
 
     let g = colorgrad::rainbow();
+    let mandelbrot = Mandelbrot::new(WIDTH, HEIGHT, DIVERGE_ITERATIONS, DIVERGE_THRESHOLD);
 
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
@@ -48,7 +53,7 @@ fn main() -> Result<(), Error> {
                     let x = (i % WIDTH as usize) as u32;
                     let y = (i / WIDTH as usize) as u32;
 
-                    let color = if let Some(num) = calculage_diverge_number(x, y) {
+                    let color = if let Some(num) = mandelbrot.calculage_diverge_number(x, y) {
                         let brightness = num as f64 / DIVERGE_ITERATIONS as f64;
                         g.at(brightness).to_rgba8()
                     } else {
@@ -69,22 +74,3 @@ fn main() -> Result<(), Error> {
     });
 }
 
-// TODO: Put these coords in the correct space before running this fn, so it
-// doesn't have to do the conversion.
-fn calculage_diverge_number(a: u32, b: u32) -> Option<u32> {
-    let mut aa = 0.0;
-    let mut bb = 0.0;
-
-    for n in 0..DIVERGE_ITERATIONS {
-        let xtemp = aa * aa - bb * bb + (a as f64 / WIDTH as f64) * 2.0 - 1.5;
-
-        bb = 2.0 * aa * bb + (b as f64 / HEIGHT as f64) * 2.0 - 1.0;
-        aa = xtemp;
-
-        if aa * aa + bb * bb > DIVERGE_THRESHOLD {
-            return Some(n);
-        }
-    }
-
-    None
-}
