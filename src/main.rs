@@ -39,7 +39,7 @@ fn main() -> Result<(), Error> {
         Pixels::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, surface_texture)?
     };
 
-    let g = colorgrad::rainbow();
+    let gradient = colorgrad::rainbow();
     let mandelbrot = Mandelbrot::new(DIVERGE_ITERATIONS, DIVERGE_THRESHOLD);
 
     event_loop.run(move |event, _, control_flow| {
@@ -59,7 +59,7 @@ fn main() -> Result<(), Error> {
 
                     let color = if let Some(num) = mandelbrot.calculate_at(a, b) {
                         let brightness = num as f64 / DIVERGE_ITERATIONS as f64;
-                        g.at(brightness).to_rgba8()
+                        gradient.at(brightness).to_rgba8()
                     } else {
                         [0xff, 0xff, 0xff, 0xff]
                     };
