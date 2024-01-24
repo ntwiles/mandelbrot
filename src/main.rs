@@ -10,6 +10,7 @@ const WIDTH: u32 = 300;
 const HEIGHT: u32 = 300;
 const DIVERGE_THRESHOLD: f64 = 16.0;
 const DIVERGE_ITERATIONS: u32 = 100;
+const ZOOM: f64 = 1.0;
 
 fn main() -> Result<(), Error> {
     env_logger::init();
@@ -17,7 +18,7 @@ fn main() -> Result<(), Error> {
 
     let window = {
         let size = LogicalSize::new(WIDTH as f64, HEIGHT as f64);
-        let scaled_size = LogicalSize::new(WIDTH as f64 * 3.0, HEIGHT as f64 * 3.0);
+        let scaled_size = LogicalSize::new(WIDTH as f64 * ZOOM, HEIGHT as f64 * ZOOM);
 
         WindowBuilder::new()
             .with_title("Conway's Game of Life")
