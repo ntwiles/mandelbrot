@@ -13,8 +13,6 @@ use winit_input_helper::WinitInputHelper;
 use mandelbrot::Mandelbrot;
 use config::Config;
 
-
-
 fn main() -> Result<(), Error> {
     let config = Config::load();
 
