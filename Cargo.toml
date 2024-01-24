@@ -7,6 +7,8 @@ edition = "2021"
 
 [dependencies]
 colorgrad = "0.6.2"
+dotenv = "0.15"
+dotenv_codegen = "0.15"
 env_logger = "0.10"
 pixels = "0.13.0"
 winit = "0.28"

@@ -1,4 +1,8 @@
 
+use std::{env, str::FromStr};
+
+use dotenv::dotenv;
+
 const VIEWPORT_WIDTH: u32 = 450;
 const VIEWPORT_HEIGHT: u32 = 450;
 
@@ -22,14 +26,16 @@ pub struct Config {
 
 impl Config {
     pub fn load() -> Self {
+        dotenv().ok();
+
         Self {
-            diverge_iterations: DIVERGE_ITERATIONS,
-            diverge_threshold: DIVERGE_THRESHOLD,
-            scroll_speed: SCROLL_SPEED,
-            starting_zoom: STARTING_ZOOM,
-            viewport_height: VIEWPORT_HEIGHT,
-            viewport_width: VIEWPORT_WIDTH,
-            zoom_speed: ZOOM_SPEED,
+            diverge_iterations: get_env("DIVERGE_ITERATIONS", DIVERGE_ITERATIONS),
+            diverge_threshold: get_env("DIVERGE_THRESHOLD", DIVERGE_THRESHOLD),
+            scroll_speed: get_env("SCROLL_SPEED", SCROLL_SPEED),
+            starting_zoom: get_env("STARTING_ZOOM", STARTING_ZOOM),
+            viewport_height: get_env("VIEWPORT_HEIGHT", VIEWPORT_HEIGHT),
+            viewport_width: get_env("VIEWPORT_WIDTH", VIEWPORT_WIDTH),
+            zoom_speed: get_env("ZOOM_SPEED", ZOOM_SPEED),
         }
     }
 
@@ -59,5 +65,13 @@ impl Config {
 
     pub fn zoom_speed(&self) -> f64 {
         self.zoom_speed
+    }
+}
+
+fn get_env<T: FromStr>(key: &str, default: T) -> T {
+    if let Ok(var) = env::var(key) {
+        var.parse().unwrap_or(default)
+    } else {
+        default
     }
 }
