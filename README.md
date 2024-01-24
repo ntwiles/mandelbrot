@@ -14,11 +14,11 @@ Navigate using WASD to pan, and Up/Down to zoom.
 
 All values have defaults, but can be overridden by writing entries to a `.env` file.
 
-### VIEWPORT_WIDTH
+### `VIEWPORT_WIDTH`
 
 The width of the window. Default: `450`.
 
-### VIEWPORT_HEIGHT
+### `VIEWPORT_HEIGHT`
 
 The height of the window. Default: `450`.
 
@@ -26,18 +26,18 @@ The height of the window. Default: `450`.
 
 The initial zoom value. Default `2`.
 
-### SCROLL_SPEED
+### `SCROLL_SPEED`
 
 The speed at which the camera pans. Default: `10`.
 
-### ZOOM_SPEED:
+### `ZOOM_SPEED`
 
 The speed at which the camera zooms. Lower values are faster. Default: `0.95`.
 
-### DIVERGE_THRESHOLD:
+### `DIVERGE_THRESHOLD`
 
 The value at which a result can be considered to have diverged. Default: `16.0`.
 
-### DIVERGE_ITERATIONS:
+### `DIVERGE_ITERATIONS`
 
 The number of iterations before a result can be considered not to have diverged. Default `100`.
