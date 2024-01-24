@@ -1,7 +1,6 @@
 ## Requirements
 
-In order to run this package, you must install Rust:
-https://www.rust-lang.org/tools/install
+In order to run this package, you must [install Rust](https://www.rust-lang.org/tools/install)
 
 ## Usage
 
