@@ -11,8 +11,8 @@ use winit_input_helper::WinitInputHelper;
 
 use mandelbrot::Mandelbrot;
 
-const VIEWPORT_WIDTH: u32 = 350;
-const VIEWPORT_HEIGHT: u32 = 350;
+const VIEWPORT_WIDTH: u32 = 450;
+const VIEWPORT_HEIGHT: u32 = 450;
 const STARTING_ZOOM: f64 = 2.0;
 
 const SCROLL_SPEED: f64 = 10.0;
@@ -30,12 +30,11 @@ fn main() -> Result<(), Error> {
 
     let window = {
         let size = LogicalSize::new(VIEWPORT_WIDTH as f64, VIEWPORT_HEIGHT as f64);
-        let scaled_size = LogicalSize::new(VIEWPORT_WIDTH as f64, VIEWPORT_HEIGHT as f64);
 
         WindowBuilder::new()
             .with_title("Mandelbrot Set Visualizer")
-            .with_inner_size(scaled_size)
-            .with_min_inner_size(size)
+            .with_inner_size(size)
+            .with_resizable(false)
             .build(&event_loop)
             .unwrap()
     };
@@ -88,6 +87,7 @@ fn main() -> Result<(), Error> {
                 window.request_redraw();
             }
 
+            // TODO: Factor in delta time during zoom in/out.
             if input.key_held(VirtualKeyCode::Up) {
                 zoom *= ZOOM_SPEED;
                 x_scroll += (1.0 - ZOOM_SPEED) / 2.0 * zoom;
