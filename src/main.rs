@@ -21,7 +21,7 @@ fn main() -> Result<(), Error> {
         let scaled_size = LogicalSize::new(WIDTH as f64 * ZOOM, HEIGHT as f64 * ZOOM);
 
         WindowBuilder::new()
-            .with_title("Conway's Game of Life")
+            .with_title("Mandelbrot Set Visualizer")
             .with_inner_size(scaled_size)
             .with_min_inner_size(size)
             .build(&event_loop)
